@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        background-image: url("images/half light green and half white solid colour background for website (1).jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        width: 100vw;
+        overflow: auto;
+        backdrop-filter: blur(10px);
+        overflow-x: hidden;
+        background-attachment: fixed;
+        margin: 0;
+        opacity: 0;
+        transition: opacity 0.8s ease-in-out;
+      }
+
+      nav {
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+      }
+
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: inherit;
+        filter: blur(5px);
+        z-index: -1;
+      }
+
+      .content {
+        position: relative;
+        z-index: 1;
+      }
+
+      .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+      }
+      @keyframes popOut {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.05);
+        }
+      }
+
+      .card:hover {
+        animation: popOut 0.9s forwards;
+      }
+
+      .relative {
+        position: relative;
+        z-index: 10;
+      }
+
+      .side-filter {
+        position: fixed;
+        top: 0;
+        right: -250px;
+        width: 250px;
+        height: 100%;
+        background: white;
+        backdrop-filter: blur(100px);
+        box-shadow: -4px 0 6px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        transition: right 0.4s ease-in-out;
+        z-index: 1000;
+        color: white;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .side-filter.show {
+        right: 0;
+      }
+
+      .side-filter h3 {
+        margin-bottom: 10px;
+        font-size: 18px;
+        color: black;
+      }
+
+      .side-filter ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+      }
+
+      .side-filter li {
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background 0.2s;
+        color: black;
+      }
+
+      .side-filter li:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 20px;
+        background: none;
+        border: none;
+        color: red;
+      }
+
+      #chatbot-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+      }
+
+      #chatbot-header {
+        background: #007bff;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      #chatbot-body {
+        padding: 10px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      #chatbot-messages {
+        margin-bottom: 10px;
+      }
+
+      .chat-message {
+        padding: 5px 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+      }
+
+      .user {
+        background: #007bff;
+        color: white;
+        text-align: right;
+      }
+
+      .bot {
+        background: #f1f1f1;
+        color: black;
+      }
+
+      #chatbot-input {
+        width: calc(100% - 20px);
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+    </style>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <title>Virtual Garden Home</title>
+  </head>
+  <body>
+    <div class="content">
+      <nav
+        class="bg-white bg-opacity-50 shadow-md px-4 py-2 flex items-center justify-between w-full"
+        style="backdrop-filter: blur(5px)"
+      >
+        <div class="text-xl font-bold text-green-600">AYUSH</div>
+
+        <div class="relative flex-1 max-w-lg mx-4 flex items-center">
+          <input
+            type="text"
+            id="search-bar"
+            placeholder="Search plants..."
+            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+          />
+          <button
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+          >
+            🔍
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            id="filter-btn"
+            class="bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+            style="border-radius: 9999px"
+          >
+            Filters
+          </button>
+          <button
+            class="bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+            style="border-radius: 9999px"
+            onclick="showAbout()"
+          >
+            <a href="aboutus.html" style="color: white; text-decoration: none"
+              >About Us</a
+            >
+          </button>
+        </div>
+      </nav>
+
+      <!-- Side Filter Panel -->
+      <div id="side-filter" class="side-filter bg-white bg-opacity-50">
+        <button class="close-btn" onclick="toggleSideFilter()">✖</button>
+        <h3>Filter Plants</h3>
+        <ul>
+          <li onclick="filterPlants('Ayurveda')">Ayurveda</li>
+          <li onclick="filterPlants('Yoga and Naturopathy')">
+            Yoga and Naturopathy
+          </li>
+          <li onclick="filterPlants('Unani')">Unani</li>
+          <li onclick="filterPlants('Siddha')">Siddha</li>
+          <li onclick="filterPlants('Homeopathy')">Homeopathy</li>
+          <li
+            onclick="resetFilters()"
+            style="color: red; font-weight: bold; cursor: pointer"
+          >
+            Reset Filters
+          </li>
+        </ul>
+      </div>
+      <script>
+        function toggleSideFilter() {
+          document.getElementById("side-filter").classList.toggle("show");
+        }
+
+        document
+          .getElementById("filter-btn")
+          .addEventListener("click", toggleSideFilter);
+
+        function filterPlants(category) {
+          let plants = document.querySelectorAll(".container .col");
+
+          plants.forEach((plant) => {
+            let plantCategory = plant.getAttribute("data-category") || "";
+            if (category === "all" || plantCategory.includes(category)) {
+              plant.style.display = "block";
+            } else {
+              plant.style.display = "none";
+            }
+          });
+
+          toggleSideFilter();
+        }
+
+        document
+          .getElementById("search-bar")
+          .addEventListener("input", function () {
+            let searchQuery = this.value.toLowerCase();
+            let plants = document.querySelectorAll(".container .col");
+
+            plants.forEach((plant) => {
+              let plantName = plant
+                .querySelector(".card-title")
+                .textContent.toLowerCase();
+              if (plantName.includes(searchQuery)) {
+                plant.style.display = "block";
+              } else {
+                plant.style.display = "none";
+              }
+            });
+          });
+        function resetFilters() {
+          let plants = document.querySelectorAll(".container .col");
+          plants.forEach((plant) => {
+            plant.style.display = "block";
+          });
+          toggleSideFilter();
+        }
+      </script>
+
+      <div class="container mt-4">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          <!-- Adjusted for 9 cards on screen -->
+          <div
+            class="col"
+            data-name="tulsi (holy basil)"
+            data-category="Ayurveda"
+          >
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\tulsi.jpg"
+                class="card-img-top"
+                alt="Plant 1"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Tulsi (Holy Basil)</h5>
+                <p class="card-text">
+                  A sacred plant in Hinduism, known for its medicinal
+                  properties.
+                </p>
+                <a
+                  href="plant.html?id=1"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col" data-name="ashwagandha" data-category="Ayurveda">
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\ashwagandha.png"
+                class="card-img-top"
+                alt="Plant 2"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Ashwagandha</h5>
+                <p class="card-text">
+                  An ancient medicinal herb used in Ayurvedic medicine.
+                </p>
+                <a
+                  href="plant.html?id=2"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col" data-name="neem" data-category="Ayurveda">
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\neem.png"
+                class="card-img-top"
+                alt="Plant 3"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Neem</h5>
+                <p class="card-text">
+                  A versatile medicinal plant used in various AYUSH systems.
+                </p>
+                <a
+                  href="plant.html?id=3"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col" data-name="turmeric" data-category="Ayurveda">
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\turmeric.png"
+                class="card-img-top"
+                alt="Plant 4"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Turmeric</h5>
+                <p class="card-text">
+                  A powerful anti-inflammatory and antioxidant spice.Yellow
+                  colour is extracted from it.
+                </p>
+                <a
+                  href="plant.html?id=4"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col" data-name="senna" data-category="Unani">
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\senna.png"
+                class="card-img-top"
+                alt="Plant 5"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Senna</h5>
+                <p class="card-text">
+                  A natural laxative used in Unani medicine used to treat
+                  constipation.
+                </p>
+                <a
+                  href="plant.html?id=5"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col" data-name="nilavembu" data-category="Siddha">
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\Nilavembu.webp"
+                class="card-img-top"
+                alt="Plant 6"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Nilavembu</h5>
+                <p class="card-text">
+                  A bitter herb known for its potent antiviral and
+                  immune-boosting properties.
+                </p>
+                <a
+                  href="plant.html?id=6"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col" data-name="arnica" data-category="Homeopathy">
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\Arnica.jpg"
+                class="card-img-top"
+                alt="Plant 4"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Arnica</h5>
+                <p class="card-text">
+                  A homeopathic remedy used primarily for pain and injury.
+                </p>
+                <a
+                  href="plant.html?id=7"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="col"
+            data-name="aloe-vera"
+            data-category="Yoga and Naturopathy"
+          >
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\aloe vera.png"
+                class="card-img-top"
+                alt="Plant 5"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Aloe-Vera</h5>
+                <p class="card-text">
+                  A soothing and healing plant widely used for skin health and
+                  digestion.
+                </p>
+                <a
+                  href="plant.html?id=8"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col" data-name="amla" data-category="Unani">
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\amla.png"
+                class="card-img-top"
+                alt="Plant 6"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Amla</h5>
+                <p class="card-text">
+                  A potent source of Vitamin C with numerous health benefits.
+                </p>
+                <a
+                  href="plant.html?id=9"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="col"
+            data-name="izkhir (lemon grass)"
+            data-category="Unani"
+          >
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\lemon grass2.jpg"
+                class="card-img-top"
+                alt="Plant 6"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Izkhir (Lemon Grass)</h5>
+                <p class="card-text">
+                  A cooling and calming herb used for its aromatic and
+                  therapeutic properties.
+                </p>
+                <a
+                  href="plant.html?id=10"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col" data-name="gajar (carrot)" data-category="Unani">
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\gajar2.jpg"
+                class="card-img-top"
+                alt="Plant 6"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Gajar (Carrot)</h5>
+                <p class="card-text">
+                  A nutrient-rich root vegetable known for its benefits to eye
+                  health and digestion.
+                </p>
+                <a
+                  href="plant.html?id=11"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col" data-name="badiyan (saunf)" data-category="Unani">
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\saunf.png"
+                class="card-img-top"
+                alt="Plant 6"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Badiyan (Saunf)</h5>
+                <p class="card-text">
+                  A flavorful spice with digestive and respiratory benefits.
+                </p>
+                <a
+                  href="plant.html?id=12"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col" data-name="kabasura kudineer" data-category="siddha">
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\Kabasura Kudineer.jpg"
+                class="card-img-top"
+                alt="Plant 6"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Kabasura Kudineer</h5>
+                <p class="card-text">
+                  A herbal formulation known for its antiviral and
+                  immune-boosting properties.
+                </p>
+                <a
+                  href="plant.html?id=13"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col" data-name="amukkara choornam" data-category="Siddha">
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\amukkara choornam2.jpg"
+                class="card-img-top"
+                alt="Plant 6"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Amukkara Choornam</h5>
+                <p class="card-text">
+                  An adaptogenic herbal powder that helps reduce stress and
+                  improve vitality.
+                </p>
+                <a
+                  href="plant.html?id=14"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="col"
+            data-name="maharasanadi kwatham"
+            data-category="Siddha"
+          >
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\maharasanadi-kwatham.webp"
+                class="card-img-top"
+                alt="Plant 6"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Maharasanadi Kwatham</h5>
+                <p class="card-text">
+                  A classical formulation for joint pain and inflammatory
+                  conditions.
+                </p>
+                <a
+                  href="plant.html?id=15"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="col"
+            data-name="yograj guggulu"
+            data-category="Yoga and Naturopathy"
+          >
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\yograj guggulu.webp"
+                class="card-img-top"
+                alt="Plant 6"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Yogaraj Guggulu</h5>
+                <p class="card-text">
+                  An formula used for joint and muscle health, particularly in
+                  relieving arthritis and rheumatism.
+                </p>
+                <a
+                  href="plant.html?id=16"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="col"
+            data-name="brahmi vati"
+            data-category="Yoga and Naturopathy"
+          >
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\bhrami vati.jpg"
+                class="card-img-top"
+                alt="Plant 6"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Brahmi Vati</h5>
+                <p class="card-text">
+                  A herbal tablet known for enhancing memory and cognitive
+                  function.
+                </p>
+                <a
+                  href="plant.html?id=17"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="col"
+            data-name="triphala churna"
+            data-category="Yoga and Naturopathy"
+          >
+            <div
+              class="card border-3 border-green-800 bg-green-200 bg-opacity-30 rounded-lg backdrop-blur-sm shadow-xl shadow-gray-400"
+              style="
+                background: rgba(144, 238, 144, 0.3);
+                border-radius: 10px;
+                backdrop-filter: blur(5px);
+              "
+            >
+              <img
+                src="plant_images\Triphala Churna.jpg"
+                class="card-img-top"
+                alt="Plant 6"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Triphala Churna</h5>
+                <p class="card-text">
+                  traditional powder known for its detoxifying and digestive
+                  benefits.
+                </p>
+                <a
+                  href="plant.html?id=18"
+                  class="btn btn-success bg-gradient-to-r from-green-400 to-green-600 text-white px-4 py-2 rounded-full hover:from-green-500 hover:to-green-700"
+                  style="border-radius: 9999px"
+                  >View Details</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("search-bar")
+        .addEventListener("input", function () {
+          let searchQuery = this.value.toLowerCase();
+          let plants = document.querySelectorAll(".container .col");
+
+          plants.forEach((plant) => {
+            let plantName = plant.getAttribute("data-name") || "";
+            if (plantName.includes(searchQuery)) {
+              plant.style.display = "block";
+            } else {
+              plant.style.display = "none";
+            }
+          });
+        });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.body.style.opacity = "1";
+      });
+    </script>
+  </body>
+</html>

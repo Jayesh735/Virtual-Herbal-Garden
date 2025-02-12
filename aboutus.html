@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Virtual Herbal Garden</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+        
+        /* Prevent horizontal scrolling */
+        html, body {
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(45deg, rgba(72, 182, 85, 0.8), rgba(34, 193, 195, 0.8)); /* Updated gradient */
+            color: #fff;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Fixed header at the top with navy blue and increased transparency */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(1, 59, 87, 0.88); /* Navy blue with increased transparency */
+            padding: 15px;
+            font-size: 0.8em; /* Reduced header size */
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: popUp 1.5s ease-out;
+            z-index: 10; /* Ensure it's above the other content */
+            width: 96.55%;
+            border-radius: 12px;
+            display: flex;
+            justify-content:center; 
+            align-items: center;
+        }
+        .header-left {
+    font-size: 1.5em; /* Larger font size for "AYUSH" */
+    font-weight: bold;
+    color: #fff; /* White color for the text */
+    position: absolute; /* Position "AYUSH" to the left */
+    left: 15px; 
+}
+
+        /* Footer with navy blue and increased transparency */
+        footer {
+            background: rgba(1, 59, 87, 0.88); /* Navy blue with increased transparency */
+            padding: 15px;
+            font-size: 1.2em;
+            font-family: 'Roboto', sans-serif;
+            width: 97.7%;
+            margin-top: 20px;
+            border-radius: 12px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin-top: 100px; /* Adjusted for fixed header */
+            margin-bottom: 80px;
+            width: 100%;
+        }
+
+        .card {
+            background: #fff; /* White background */
+            color: #333; /* Dark text for readability */
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-sizing: border-box; /* Ensure padding doesn't cause overflow */
+        }
+
+        .card h2 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .card p, .card ul {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Pop-up animation */
+        @keyframes popUp {
+            from {
+                transform: translateY(20px) scale(0.7);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Slide-up Animation */
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .slide-up {
+            animation: slideUp 1s ease-out;
+        }
+
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            .card {
+                width: 90%;
+            }
+
+            header {
+                font-size: 1.8em; /* Slightly smaller font size for mobile */
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+      <div class="header-left">AYUSH</div>
+        <h1>About Our Virtual Herbal Garden</h1>
+    </header>
+
+    <section class="container">
+        <div class="card slide-up">
+            <h2>Our Mission</h2>
+            <p>We aim to create an interactive and educational space for exploring medicinal plants in a digital environment.</p>
+        </div>
+        <div class="card slide-up">
+            <h2>Importance of Herbs</h2>
+            <p>Herbs have been an integral part of human civilization, offering medicinal benefits that support overall well-being. Their therapeutic properties help in treating various ailments naturally.</p>
+        </div>
+        <div class="card slide-up">
+            <h2>About AYUSH</h2>
+            <p>AYUSH (Ayurveda, Yoga & Naturopathy, Unani, Siddha, and Homeopathy) is an initiative by the Indian government to promote traditional healthcare systems and integrate them into modern practices.</p>
+        </div>
+        <div class="card slide-up">
+            <h2>Features</h2>
+            <ul>
+                <li>Interactive 2D herbal garden</li>
+                <li>3D plant models for immersive experience</li>
+                <li>Detailed medicinal properties of each plant</li>
+            </ul>
+        </div>
+        <div class="card slide-up">
+            <h2>Meet the Team</h2>
+            <p>A passionate group of developers, designers, and plant enthusiasts bringing this project to life.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Virtual Herbal Garden. All rights reserved.</p>
+    </footer>
+</body>
+</html>

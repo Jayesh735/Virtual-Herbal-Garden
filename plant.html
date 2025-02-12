@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Details</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer@latest/dist/model-viewer.min.js"></script>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #b2e5b2, #dff3df);
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .plant-table {
+            width: 80%;
+            max-width: 700px;
+            background: white;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transition: transform 0.2s ease-in-out;
+        }
+        .plant-table:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            font-size: 18px;
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            font-weight: 600;
+            color: #2c6e49;
+        }
+        td {
+            color: #444;
+        }
+        td img {
+            width: 130px;
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+        td img:hover {
+            transform: scale(1.05);
+        }
+        model-viewer {
+            width: 100%;
+            max-width: 340px;
+            height: 280px;
+            background-color: #f8f8f8;
+            border-radius: 14px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="plant-table">
+        <table>
+            <tr>
+                <th>Name</th>
+                <td id="plant-name"></td>
+            </tr>
+            <tr>
+                <th>Scientific Name</th>
+                <td id="plant-sname"></td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td><img id="plant-image" src="" alt="Plant Image"></td>
+            </tr>
+            <tr>
+                <th>Short Description</th>
+                <td id="plant-shortDescription"></td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td id="plant-description"></td>
+            </tr>
+            <tr>
+                <th>Medicinal Uses</th>
+                <td id="plant-medicinalUses"></td>
+            </tr>
+            <tr>
+                <th>Ayush System</th>
+                <td id="plant-ayush"></td>
+            </tr>
+            <tr id="model-row">
+                <th>3D Model</th>
+                <td><model-viewer id="plant-model" src="" alt="3D Model of Plant" auto-rotate camera-controls></model-viewer></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    async function loadPlantDetails() {
+        const params = new URLSearchParams(window.location.search);
+        const plantId = params.get("id");
+
+        const response = await fetch("plants.json");
+        const plants = await response.json();
+        
+        const plant = plants.find(p => p.id == plantId);
+        if (plant) {
+            document.getElementById("plant-image").src = plant.image;
+            document.getElementById("plant-name").textContent = plant.name;
+            document.getElementById("plant-sname").textContent = plant.sciname;
+            document.getElementById("plant-shortDescription").textContent = plant.shortDescription;
+            document.getElementById("plant-description").textContent = plant.description;
+            document.getElementById("plant-medicinalUses").textContent = plant.medicinalUses.join(", ");
+            document.getElementById("plant-ayush").textContent = plant.ayushSystem;
+
+            if (plant.model) {
+                document.getElementById("plant-model").src = plant.model;
+            } else {
+                document.getElementById("model-row").style.display = "none";
+            }
+        } else {
+            document.querySelector(".plant-table").innerHTML = "<p style='color:black;'>Plant not found.</p>";
+        }
+    }
+
+    loadPlantDetails();
+</script>
+
+</body>
+</html>

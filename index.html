@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Herbal Garden</title>
+    <!-- Bootstrap CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Quicksand Bold 700 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Apply the Quicksand font globally */
+      body {
+        font-family: "Quicksand", sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(
+          45deg,
+          rgba(72, 182, 85, 0.8),
+          rgba(34, 193, 195, 0.8)
+        );
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out; /* Gradient Background */
+      }
+
+      /* Overlay for the content */
+      .overlay {
+        background-color: rgba(
+          0,
+          0,
+          0,
+          0.4
+        ); /* Semi-transparent dark overlay */
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 800px;
+        text-align: center;
+        animation: popup 1.5s ease-out; /* Pop-up animation for the background and content */
+      }
+
+      /* Large and elegant title */
+      .typewriter h1 {
+        font-family: "Quicksand", sans-serif;
+        font-size: 2rem; /* Adjusted to make the text smaller */
+        font-weight: 700; /* Bold style for Quicksand */
+        overflow: hidden; /* Ensures text doesn't go outside */
+        border-right: 0.15em solid orange; /* Creates a cursor effect */
+        white-space: nowrap; /* Prevents wrapping */
+        letter-spacing: 0.15em;
+        animation: typing 6s steps(30) 1s 1 normal both,
+          blink 0.75s step-end infinite;
+        margin: 0 auto;
+      }
+
+      /* Typing effect animation */
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+
+      /* Cursor blinking effect */
+      @keyframes blink {
+        50% {
+          border-color: transparent;
+        }
+      }
+
+      /* Pop-up animation for the content */
+      @keyframes popup {
+        0% {
+          transform: scale(0);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* Button Styling */
+      .btn-primary {
+        background-color: #4caf50; /* Green color */
+        border: none;
+        font-size: 1.5rem;
+        padding: 15px 30px;
+        color: white;
+        font-family: "Quicksand", sans-serif;
+        font-weight: 700; /* Bold style for Quicksand */
+        transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+        border-radius: 25px; /* Rounded corners for a smooth effect */
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-primary:hover {
+        transform: scale(1.1); /* Grow effect on hover */
+        background-color: #388e3c; /* Darker green */
+      }
+
+      /* Card style layout for herbal information */
+      .card {
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background-color: rgba(255, 255, 255, 0.8); /* Slight transparency */
+      }
+
+      .card:hover {
+        transform: translateY(-10px); /* Hover effect: elevate the card */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .card-body {
+        text-align: center;
+        padding: 20px;
+      }
+
+      .card-title {
+        font-family: "Quicksand", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700; /* Bold style for Quicksand */
+        color: #388e3c;
+      }
+
+      .card-text {
+        color: #555;
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Overlay Section with Pop-up Animation -->
+    <div class="overlay">
+      <div class="text-white">
+        <!-- Typing animation applied here -->
+        <div class="typewriter">
+          <h1>Welcome to the Herbal Garden</h1>
+        </div>
+        <p class="lead mb-4">
+          Explore the world of medicinal herbs and their natural healing
+          properties.
+        </p>
+        <a href="home.html" class="btn btn-primary">Explore Now</a>
+      </div>
+    </div>
+
+    <!-- Bootstrap and Tailwind JS (optional) -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.body.style.opacity = 1;
+      });
+
+      document.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          let href = this.href;
+          document.body.style.opacity = 0;
+          setTimeout(() => (window.location.href = href), 500);
+        });
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
